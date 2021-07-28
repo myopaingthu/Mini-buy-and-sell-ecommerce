@@ -7,7 +7,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="#">Notifications <i class="fa fa-bell"></i></a>
+          <a class="nav-link" href="{{route('notifications.index')}}"><i class="fa fa-bell"></i> <span class="badge badge-secondary noti">{{$unread_noti_count}}</span></a>
         </li>
         <li class="nav-item {{ request()->routeIs('products.create') ? 'active' : '' }}">
           <a class="nav-link" href="{{ route('products.create') }}">Sell</a>
