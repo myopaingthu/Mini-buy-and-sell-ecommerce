@@ -8,6 +8,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FavouriteController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Http\Request;
 
 /*
@@ -40,6 +41,8 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('users/{user}/products/{product}/favourites', [FavouriteController::class, 'store'])->name('favourites.store');
     Route::get('favourites/{favourite}/delete', [FavouriteController::class, 'destroy'])->name('favourites.destroy');
     Route::get('users/{user}/favourites', [FavouriteController::class, 'index'])->name('userFavourites');
+    Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('notifications/{id}', [NotificationController::class, 'show'])->name('notifications.show');
     Route::resource('images', ImageController::class);
     });
 

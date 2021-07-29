@@ -6,6 +6,7 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Auth;
+use App\Notifications\NewCommentNotification;
 
 class CommentController extends Controller
 {
@@ -44,10 +45,18 @@ class CommentController extends Controller
      */
     public function store(Product $product,Request $request)
     {
-        $product->comments()->create([
+        $comment = $product->comments()->create([
             'user_id' => Auth::id(),
             'body' => $request->input('body'),
         ]);
+
+        $user = $product->user;
+        if ($comment->user_id != $product->user_id) {
+            $title = 'New Comment';
+            $text = $comment->user->name.' has commented on your product';
+            $route = route('products.comments.index', [$product->id]);
+            $user->notify(new NewCommentNotification($title, $text, $route));
+        }
         return back();
     }
 

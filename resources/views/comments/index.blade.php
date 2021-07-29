@@ -46,7 +46,7 @@
                 </div>    
             </form>
         </div>
-    </div>   
+    </div>
     @else
     <div class="card">
         <div class="card-body">

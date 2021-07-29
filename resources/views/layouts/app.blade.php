@@ -22,6 +22,12 @@
         <script src="{{ asset('js/app.js') }}" defer></script>
         
         @yield('css')
+        <style>
+            .noti {
+                position: relative;
+                top: -8px;
+            }
+        </style>
         
     </head>
     <body>
