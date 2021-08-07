@@ -62,4 +62,17 @@ class Product extends Model
     {
         return $this->hasMany(Image::class);
     }
+
+       /**  
+    *Ondelete cascade for product
+    */
+    public static function boot() {
+        parent::boot();
+
+        static::deleting(function($product) { 
+             $product->comments()->delete();
+             $product->images()->delete();
+             $product->favourites()->delete();
+        });
+    }
 }

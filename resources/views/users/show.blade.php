@@ -18,26 +18,13 @@
 @section('page', 'User Profile')
 
 @section('content')
-@if ($message = Session::get('invalid-data'))
-<div class="toast bg-dark text-white" style="position: absolute; top: 20; left: 0; z-index: 5;" data-delay="5000">
-    <div class="toast-header">
-      <strong class="mr-auto">Opps!!</strong>
-      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="toast-body">
-        {{$message}}
-    </div>
-</div>
-@endif
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-4">
         <div class="card">
             <div class="card-body">
                 <div class="text-center">
-                    <img src="{{asset('image/'.($user->profile ? $user->profile : '20210505144131.jpg'))}}" class="img-thumbnail mx-auto profile-photo" alt="...">
+                    <img src="{{$user->profile ? asset('image/'.$user->profile) :'https://ui-avatars.com/api/?name='.$user->name}}" class="img-thumbnail mx-auto profile-photo" alt="...">
                     <div class="mt-2">
                         <h5 class="card-title">{{$user->name}}</h5>
                         <a class="btn btn-dark" href="{{route('userProduct', [$user->id])}}">{{$user->products_count}} products <i class="fa fa-list"></i></a>
@@ -97,9 +84,5 @@
 </div>
 @endsection
 
-@section('script')
-<script>
-  $('.toast').toast('show')
-</script>
-@endsection
+
 

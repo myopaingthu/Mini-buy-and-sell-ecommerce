@@ -28,7 +28,7 @@
           <div class="card">
               <div class="card-body">
                   <div class="text-center">
-                      <img src="{{asset('image/'.($user->profile ? $user->profile : '20210505144131.jpg'))}}" class="img-thumbnail mx-auto profile-photo" id="preview-image-before-upload">
+                      <img src="{{$user->profile ? asset('image/'.$user->profile) :'https://ui-avatars.com/api/?name='.$user->name}}" class="img-thumbnail mx-auto profile-photo" id="preview-image-before-upload">
                       <div class="mt-2">
                         <div class="custom-file">
                             <input type="file" name="profile" class="custom-file-input" id="image">
@@ -77,7 +77,7 @@
                     <button type="submit" class="btn btn-dark">
                         {{ __('Submit') }}
                     </button>
-                    <a class="btn btn-dark float-right" href="#">Change password <i class="fa fa-unlock"></i></a>
+                    <a class="btn btn-dark float-right" href="{{route('change.password.show')}}">Change password <i class="fa fa-unlock"></i></a>
                 </div>
             </div>
           </div>

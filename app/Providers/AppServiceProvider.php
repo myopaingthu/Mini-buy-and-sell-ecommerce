@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Models\Category;
+use Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,7 +32,9 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('layouts.navigation', function ($view) {
             $unread_noti_count = 0;
-            $unread_noti_count = auth()->guard('web')->user()->unreadNotifications()->count();
+            if (Auth::check()) {
+                $unread_noti_count = auth()->guard('web')->user()->unreadNotifications()->count();
+            }
             $view->with('unread_noti_count', $unread_noti_count);
         });
     }

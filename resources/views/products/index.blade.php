@@ -27,19 +27,6 @@
 @endsection
 
 @section('content')
-@if ($message = Session::get('success'))
-<div class="toast bg-dark text-white" style="position: absolute; top: 20; right: 0; z-index: 5;" data-delay="5000">
-    <div class="toast-header">
-      <strong class="mr-auto">Bravo!!</strong>
-      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="toast-body">
-        {{$message}}
-    </div>
-</div>
-@endif  
 <div class="container-fluid mt-3">
     <div class="row">
         <div class="col-md-3">
@@ -124,8 +111,5 @@
         $(this).removeClass("text-white bg-dark");
         });
     });
-</script>
-<script>
-     $('.toast').toast('show')
 </script>
 @endsection

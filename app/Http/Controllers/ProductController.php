@@ -29,6 +29,18 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @return \Illuminate\Http\Response
+     */
+    public function guestProduct()
+    {
+        $products = Product::has('images')->paginate(12);
+        return view('welcome', compact('products'))
+            ->with('i', (request()->input('page', 1) - 1) * 12);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
      * @param  \App\Models\User $user
      * @return \Illuminate\Http\Response
      */

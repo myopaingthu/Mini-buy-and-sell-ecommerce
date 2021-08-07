@@ -44,7 +44,6 @@ class StoreProductRequest extends FormRequest
             'name.required' => 'Product name is required',
             'price.required' => 'Please describe your selling price',
             'images.required' => 'Please upload your product photo',
-            // 'images.mimes' => 'Please choose only image type(jpg,png,jpeg,gif,svg)',
             'phone.required' => 'Please describe your contact number',
             'phone.regex' => 'Please enter real phone number',
             'phone.min' => 'Please enter real phone number',
