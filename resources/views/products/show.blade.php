@@ -25,11 +25,15 @@
     <div class="col-md-4">
       <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
+          @if ($product->images->isNotEmpty())
             @foreach ($product->images as $key => $value)
             <div class="carousel-item {{$key == 0? 'active':''}}" style="height: 100%;">
                 <img src="{{asset('images/'.$value->name)}}" class="d-block w-100" alt="...">
             </div>
             @endforeach
+          @else
+                <img src="https://ui-avatars.com/api/?name={{$product->name}}" class="d-block w-100" alt="...">
+          @endif
         </div>
         <a class="carousel-control-prev bg-secondary" href="#carouselExampleControls" role="button" data-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -55,12 +59,6 @@
     </div>
     <div class="col-md-8">
       <div class="card mb-2">
-        {{-- <div class="card-header">
-          <div class="row">
-          <a class="ml-1 my-auto" href="{{ url()->previous() }}"><i class="fa fa-arrow-left text-black"></i></a>
-          <a class="btn btn-dark ml-auto" href="#">Add to favourite <i class="fa fa-heart"></i></a>
-          </div>
-        </div> --}}
         <div class="card-body p-4">
           <div class="form-group row">
             <div class="col-md-8">
@@ -90,7 +88,7 @@
               <h6 class="card-title">Seller name</h6>
             </div>
             <div class="col-md-10">
-              <p class="card-text">{{$product->user->name}}</p>
+              <p class="card-text">{{$product->user->role_id == 1 ? 'Second Boutique' : $product->user->name}}</p>
             </div>
           </div>
           <div class="form-group row">

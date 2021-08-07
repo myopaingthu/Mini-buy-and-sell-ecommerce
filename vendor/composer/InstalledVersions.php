@@ -1322,6 +1322,15 @@ private static $installed = array (
       ),
       'reference' => 'b604157f34a34c698ec89523965f0d60cc4df25b',
     ),
+    'yajra/laravel-datatables-oracle' => 
+    array (
+      'pretty_version' => 'v9.18.1',
+      'version' => '9.18.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '7148225d52bcdfdd77c24e8d456058f1150b84e7',
+    ),
   ),
 );
 private static $canGetVendors;

@@ -29,7 +29,7 @@
           <div class="card">
               <div class="card-body">
                   <div class="text-center">
-                      <img src="{{asset('image/'.($user['profile'] ? $user['profile'] : '20210505144131.jpg'))}}" class="img-thumbnail mx-auto profile-photo">
+                      <img src="{{$user['profile'] ? asset('image/'.$user['profile']) :'https://ui-avatars.com/api/?name='.$user['name']}}" class="img-thumbnail mx-auto profile-photo">
                     <input type="hidden" name="profile" value="{{$user['profile']}}">
                   </div>
               </div>

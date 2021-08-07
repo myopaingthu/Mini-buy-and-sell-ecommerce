@@ -35,15 +35,55 @@
             @include('layouts.navigation')
 
             @if (!(request()->is('products')))
-            <div class="row mb-3">
-                <div class="col-md-12">
-                  <div class="card-header row">
-                    <a class="ml-1" href="{{ url()->previous() }}"><i class="fa fa-arrow-left text-black"></i></a>
-                    <h5 class="card-title m-auto">@yield('page')</h5>
-                  </div>
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                    <div class="card-header row">
+                        <a class="ml-1 btn-back" href="#"><i class="fa fa-arrow-left text-black"></i></a>
+                        <h5 class="card-title m-auto">@yield('page')</h5>
+                    </div>
+                    </div>
+                </div> 
+            @endif
+            
+            @if ($message = Session::get('invalid-data'))
+                <div class="toast bg-dark text-white" style="position: absolute; top: 20; left: 0; z-index: 5;" data-delay="5000">
+                    <div class="toast-header">
+                        <strong class="mr-auto">Opps!!</strong>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body">
+                        {{$message}}
+                    </div>
                 </div>
-            </div> 
-            @endif   
+            @endif
+            @if ($message = Session::get('success'))
+                <div class="toast bg-dark text-white" style="position: absolute; top: 20; left: 0; z-index: 5;" data-delay="5000">
+                    <div class="toast-header">
+                        <strong class="mr-auto">Bravo!!</strong>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body">
+                        {{$message}}
+                    </div>
+                </div>
+            @endif
+            @if ($message = Session::get('error'))
+                <div class="toast bg-danger text-black" style="position: absolute; top: 20; left: 0; z-index: 5;" data-delay="5000">
+                    <div class="toast-header">
+                        <strong class="mr-auto">Sorry..</strong>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body">
+                        {{$message}}
+                    </div>
+                </div>
+            @endif 
             
             @yield('content')
             
@@ -53,6 +93,12 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
 
         @yield('script')
+        <script>
+            $(".btn-back").click(function (){
+                window.history.back();
+                });
+            $('.toast').toast('show');
+        </script>
 
     </body>
 </html>

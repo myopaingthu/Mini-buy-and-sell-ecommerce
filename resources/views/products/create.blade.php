@@ -20,15 +20,15 @@
         <div class="col-md-8">
             <div class="card mb-2">
                 <div class="card-body">
-                    <form method="POST" action="{{ route('confirmCreate') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('confirmCreate') }}" enctype="multipart/form-data" autocomplete="off">
                         @csrf
 
                         <div class="form-group row">
-                            <div class="col-md-4"></div>
+                            <label for="images" class="col-md-4 col-form-label text-md-right">{{ __('Choose Photo') }}</label>
                             <div class="col-md-6">
                                 <div class="custom-file">
                                     <input type="file" name="images[]" class="custom-file-input" id="images"  multiple>
-                                    <label class="custom-file-label" for="customFile">Choose Photo</label>
+                                    <label class="custom-file-label" for="customFile">Select once to upload multiple</label>
                                     @error('images')
                                     <span class="text-danger">{{ $message }}</span>
                                     @enderror  
@@ -127,5 +127,5 @@
     previewImages(this, 'div#images-preview-div');
     });
     });
-    </script>
+</script>
 @endsection
