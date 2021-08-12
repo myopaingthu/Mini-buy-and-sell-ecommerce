@@ -9,7 +9,3 @@
 ## Admin panel
 
 ![](demo3.gif)
-
-
-
-

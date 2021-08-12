@@ -51,7 +51,7 @@
             <div class="form-group row">
                 <label for="name" class="col-md-2 col-form-label">{{ __('Name') }}</label>
                 <div class="col-md-10">
-                    <input type="text" class="form-control" name="name" value="{{$product->name}}">
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{$product->name}}">
                     @error('name')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -77,7 +77,7 @@
             <div class="form-group row">
                 <label for="price" class="col-md-2 col-form-label">{{ __('Price') }}</label>
                 <div class="col-md-10">
-                    <input type="number" class="form-control" name="price" value="{{$product->price}}">
+                    <input type="number" class="form-control @error('price') is-invalid @enderror" name="price" value="{{$product->price}}">
                     @error('price')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -86,7 +86,7 @@
             <div class="form-group row">
                 <label for="phone" class="col-md-2 col-form-label">{{ __('Phone Number') }}</label>
                 <div class="col-md-10">
-                    <input type="tel" class="form-control" name="phone" value="{{ $product->phone }}">
+                    <input type="tel" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ $product->phone }}">
                     @error('phone')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -95,7 +95,7 @@
             <div class="form-group row">
                 <label for="address" class="col-md-2 col-form-label">{{ __('Address') }}</label>
                 <div class="col-md-10">
-                    <textarea class="form-control" style="height:60px" name="address">{{ $product->address }}</textarea>
+                    <textarea class="form-control @error('address') is-invalid @enderror" style="height:60px" name="address">{{ $product->address }}</textarea>
                     @error('address')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror

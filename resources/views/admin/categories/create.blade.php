@@ -23,7 +23,7 @@
             <div class="form-group row">
                 <label for="name" class="col-md-2 col-form-label">{{ __('Name') }}</label>
                 <div class="col-md-10">
-                    <input type="text" class="form-control" name="name" value="{{old('name')}}">
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}">
                     @error('name')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror

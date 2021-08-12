@@ -34,7 +34,7 @@
                 <label for="images" class="col-md-2 col-form-label">{{ __('Choose Photo') }}</label>
                 <div class="col-md-10">
                     <div class="custom-file">
-                        <input type="file" name="images[]" class="custom-file-input" id="images"  multiple>
+                        <input type="file" name="images[]" class="custom-file-input @error('images') is-invalid @enderror" id="images"  multiple>
                         <label class="custom-file-label" for="customFile">Select once to upload multiple</label>
                         @error('images')
                         <span class="text-danger">{{ $message }}</span>
@@ -46,7 +46,7 @@
             <div class="form-group row">
                 <label for="name" class="col-md-2 col-form-label">{{ __('Name') }}</label>
                 <div class="col-md-10">
-                    <input type="text" class="form-control" name="name" value="{{old('name')}}">
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}">
                     @error('name')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -68,7 +68,7 @@
             <div class="form-group row">
                 <label for="price" class="col-md-2 col-form-label">{{ __('Price') }}</label>
                 <div class="col-md-10">
-                    <input type="number" class="form-control" name="price" value="{{old('price')}}">
+                    <input type="number" class="form-control @error('price') is-invalid @enderror" name="price" value="{{old('price')}}">
                     @error('price')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -77,7 +77,7 @@
             <div class="form-group row">
                 <label for="phone" class="col-md-2 col-form-label">{{ __('Phone Number') }}</label>
                 <div class="col-md-10">
-                    <input type="tel" class="form-control" name="phone" value="{{ old('phone') }}">
+                    <input type="tel" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}">
                     @error('phone')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -86,7 +86,7 @@
             <div class="form-group row">
                 <label for="address" class="col-md-2 col-form-label">{{ __('Address') }}</label>
                 <div class="col-md-10">
-                    <textarea class="form-control" style="height:60px" name="address">{{ old('address') }}</textarea>
+                    <textarea class="form-control @error('address') is-invalid @enderror" style="height:60px" name="address">{{ old('address') }}</textarea>
                     @error('address')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror

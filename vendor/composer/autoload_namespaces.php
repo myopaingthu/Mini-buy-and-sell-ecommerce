@@ -8,4 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     'WhereIsLucas\\LaravelBootstrapToasts' => array($vendorDir . '/whereislucas/laravel-bootstrap-toasts/src'),
     'Mockery' => array($vendorDir . '/mockery/mockery/library'),
+    'HTMLPurifier' => array($vendorDir . '/ezyang/htmlpurifier/library'),
 );

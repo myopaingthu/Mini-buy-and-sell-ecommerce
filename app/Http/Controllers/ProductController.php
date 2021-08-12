@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\Models\Image;
-use App\Models\User;
-use Illuminate\Http\Request;
-use App\Models\Category;
-use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\EditProductRequest;
+use App\Http\Requests\StoreProductRequest;
+use App\Models\Category;
+use App\Models\Image;
+use App\Models\Product;
+use App\Models\User;
 use Auth;
 use DB;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -21,7 +21,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::latest()->paginate(12);
+        $products = Product::where('available', 1)->latest()->paginate(12);
         return view('products.index', compact('products'))
             ->with('i', (request()->input('page', 1) - 1) * 12);
     }
@@ -33,7 +33,7 @@ class ProductController extends Controller
      */
     public function guestProduct()
     {
-        $products = Product::has('images')->paginate(12);
+        $products = Product::where('available', 1)->latest()->paginate(12);
         return view('welcome', compact('products'))
             ->with('i', (request()->input('page', 1) - 1) * 12);
     }
@@ -58,7 +58,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = Category::all(); 
+        $categories = Category::all();
         return view('products.create', compact('categories'));
     }
 
@@ -70,23 +70,23 @@ class ProductController extends Controller
      */
     public function confirmCreate(StoreProductRequest $request)
     {
-        $product=$request->only([
+        $product = $request->only([
             'name',
             'price',
             'phone',
             'address',
-            'description'
-         ]);
+            'description',
+        ]);
 
-         $category = Category::where('id',$request->input('category'))->first();
+        $category = Category::where('id', $request->input('category'))->first();
 
-            foreach ($request->file('images')  as $key => $value) {
-                $image = time() . $key . '.' . $value->getClientOriginalExtension();
-                $value->move(public_path('images'), $image);
-                $images[] = $image;
-            }
+        foreach ($request->file('images') as $key => $value) {
+            $image = time() . $key . '.' . $value->getClientOriginalExtension();
+            $value->move(public_path('images'), $image);
+            $images[] = $image;
+        }
 
-        return view('products.confirmCreate', compact('product','category','images'));
+        return view('products.confirmCreate', compact('product', 'category', 'images'));
     }
 
     /**
@@ -107,12 +107,12 @@ class ProductController extends Controller
             'description' => $request->input('description'),
         ]);
 
-        foreach ($request->input('images') as $value){
+        foreach ($request->input('images') as $value) {
             $image = new Image(['name' => $value]);
             $product->images()->save($image);
         }
         return redirect()->route('products.index')
-                        ->with('success','Product uploaded successfully.');
+            ->with('success', 'Product uploaded successfully.');
     }
 
     /**
@@ -129,15 +129,13 @@ class ProductController extends Controller
                 if ($value->product_id == $product->id) {
                     $favourited = $value->id;
                     break;
-                }
-                else {
+                } else {
                     $favourited = 0;
                 }
             }
-        }
-        else {
+        } else {
             $favourited = 0;
-        } 
+        }
         return view('products.show', compact('product', 'favourited'));
     }
 
@@ -149,6 +147,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        $this->authorize('update', $product);
+
         $categories = Category::all();
         return view('products.edit', compact('product', 'categories'));
     }
@@ -162,32 +162,35 @@ class ProductController extends Controller
      */
     public function confirmEdit(EditProductRequest $request, Product $product)
     {
-        $edited_product=$request->only([
+        $this->authorize('update', $product);
+
+        $edited_product = $request->only([
             'name',
             'price',
             'phone',
             'address',
-            'description'
-         ]);
+            'description',
+        ]);
 
-         $category = Category::where('id', $request->input('category'))->first();
+        $edited_product['available'] = $request->input('available') ? $request->input('available') : 0;
 
-         if ($request->file('images')){
-            foreach ($request->file('images')  as $key => $value) {
+        $category = Category::where('id', $request->input('category'))->first();
+
+        if ($request->file('images')) {
+            foreach ($request->file('images') as $key => $value) {
                 $image = time() . $key . '.' . $value->getClientOriginalExtension();
                 $value->move(public_path('images'), $image);
                 $images[] = $image;
             }
-         }
-         else {
+        } else {
             foreach ($product->images as $key => $value) {
                 $images[] = $value->name;
             }
-         }
+        }
 
-         $id = $product->id;
+        $id = $product->id;
 
-         return view('products.confirmEdit', compact('edited_product','category','images', 'id'));
+        return view('products.confirmEdit', compact('edited_product', 'category', 'images', 'id'));
     }
 
     /**
@@ -199,42 +202,32 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        $this->authorize('update', $product);
+
         DB::table('products')
-        ->where('id', $product->id)
-        ->update([
-            'name' => $request->input('name'),
-            'category_id' => $request->input('category'),
-            'price' => $request->input('price'),
-            'phone' => $request->input('phone'),
-            'address' => $request->input('address'),
-            'description' => $request->input('description'),
-        ]);
+            ->where('id', $product->id)
+            ->update([
+                'name' => $request->input('name'),
+                'category_id' => $request->input('category'),
+                'price' => $request->input('price'),
+                'phone' => $request->input('phone'),
+                'address' => $request->input('address'),
+                'description' => $request->input('description'),
+                'available' => $request->input('available'),
+            ]);
 
         $product_images = $product->images;
         foreach ($product_images as $product_image) {
             $product_image->delete();
         }
 
-        foreach ($request->input('images') as $value){
+        foreach ($request->input('images') as $value) {
             $image = new Image(['name' => $value]);
             $product->images()->save($image);
         }
 
-        // foreach ($product_images as $product_image) {
-        //     foreach ($request->input('images') as $value) {
-        //         if ($value == $product_image->name) {
-        //             break;
-        //         }
-        //         else {
-        //             $image = new Image(['name' => $value]);
-        //             $product->images()->save($image);
-        //             $product_image->delete();
-        //         }
-        //     }   
-        // }
-
         return redirect()->route('products.index')
-                        ->with('success','Product edited successfully.');
+            ->with('success', 'Product edited successfully.');
     }
 
     /**
@@ -245,9 +238,11 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        $this->authorize('delete', $product);
+
         $product->delete();
         return redirect()->route('products.index')
-                        ->with('success','Product deleted successfully.');
+            ->with('success', 'Product deleted successfully.');
     }
 
     /**
@@ -263,8 +258,8 @@ class ProductController extends Controller
         ]);
         $query = $request->input('search');
         $products = Product::where('name', 'like', "%$query%")
-                           ->orWhere('description', 'like', "%$query%")
-                           ->get();
+            ->orWhere('description', 'like', "%$query%")
+            ->get();
         return view('products.searchedProducts', compact('products'));
     }
 
@@ -281,17 +276,14 @@ class ProductController extends Controller
 
         if ($type == 'date' && $sort == 'ascend') {
             $products = Product::orderBy('created_at', 'asc')->paginate(12);
-        }
-        elseif ($type == 'date' && $sort == 'descend') {
+        } elseif ($type == 'date' && $sort == 'descend') {
             $products = Product::orderBy('created_at', 'desc')->paginate(12);
-        }
-        elseif ($type == 'price' && $sort == 'descend') {
+        } elseif ($type == 'price' && $sort == 'descend') {
             $products = Product::orderBy('price', 'desc')->paginate(12);
-        }
-        else {
+        } else {
             $products = Product::orderBy('price', 'asc')->paginate(12);
         }
-        
+
         return view('products.index', compact('products'))
             ->with('i', (request()->input('page', 1) - 1) * 12);
     }

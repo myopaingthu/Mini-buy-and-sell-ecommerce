@@ -60,6 +60,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        $this->authorize('update', $user);
+
         return view('users.edit', compact('user'));
     }
 
@@ -71,13 +73,16 @@ class UserController extends Controller
      */
     public function confirmEdit(EditUserRequest $request)
     {
+        $user_model = User::findOrFail($request->input('id'));
+        $this->authorize('update', $user_model);
+        
         $user=$request->only([
             'name',
             'email',
             'phone',
             'address'
          ]);
-         $user['id'] = $request->user()->id; 
+         $user['id'] = $request->input('id'); 
 
          if ($files = $request->file('profile')) {
             $destinationPath = 'image/'; // upload path
@@ -100,6 +105,8 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        $this->authorize('update', $user);
+
         $user->update($request->all());
         return redirect()->route('products.index')
                         ->with('success','Profile edited successfully.');

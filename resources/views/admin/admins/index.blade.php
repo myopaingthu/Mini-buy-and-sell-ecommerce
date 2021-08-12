@@ -27,6 +27,7 @@
                     <th>Id</th>
                     <th>Name</th>
                     <th>Email</th>
+                    <th>Last Logged in At</th>
                     <th>Created At</th>
                     <th>Action</th>
                 </tr>
@@ -48,10 +49,12 @@
             { data: 'id', name: 'id' },
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
+            { data: 'last_login_at', name: 'last_login_at' },
             { data: 'created_at', name: 'created_at' },
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });
+    
     $(document).on('click', '.delete-button', function(e){
         e.preventDefault();
         var id = $(this).data('id');
