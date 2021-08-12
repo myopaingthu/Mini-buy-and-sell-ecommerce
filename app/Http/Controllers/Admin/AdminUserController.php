@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Yajra\Datatables\Datatables;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
-use App\Http\Requests\CreateUserRequest;
+use Yajra\Datatables\Datatables;
 
 class AdminUserController extends Controller
 {
@@ -31,17 +30,17 @@ class AdminUserController extends Controller
     {
         $users = User::where('role_id', 2)->get();
         return Datatables::of($users)->editColumn('created_at', function ($request) {
-                                        return $request->created_at->format('Y-m-d'); // human readable format
-                                    })
-                                    ->addColumn('products', function($user) {
-                                        return $user->products->count();
-                                    })
-                                    ->addColumn('action', function ($user) {
-                                        $icon = '<a href="'.route('adminusers.edit', [$user->id]).'" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i> Edit</a>
-                                            <button type="submit" class="btn btn-sm btn-danger delete-button" data-id="'.$user->id.'"><i class="fas fa-trash"></i> Delete</button>';
-                                        return $icon;
-                                    })
-                                    ->make(true);
+            return $request->created_at->format('Y-m-d'); // human readable format
+        })
+            ->addColumn('products', function ($user) {
+                return $user->products->count();
+            })
+            ->addColumn('action', function ($user) {
+                $icon = '<a href="' . route('adminusers.edit', [$user->id]) . '" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i> Edit</a>
+                                            <button type="submit" class="btn btn-sm btn-danger delete-button" data-id="' . $user->id . '"><i class="fas fa-trash"></i> Delete</button>';
+                return $icon;
+            })
+            ->make(true);
     }
 
     /**
@@ -66,11 +65,11 @@ class AdminUserController extends Controller
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('name')),
-            'role_id' => 2
+            'role_id' => 2,
         ]);
 
         return redirect()->route('adminusers.index')
-                        ->with('success','User created successfully.');
+            ->with('success', 'User created successfully.');
     }
 
     /**
@@ -118,7 +117,7 @@ class AdminUserController extends Controller
         $user->update();
 
         return redirect()->route('adminusers.index')
-                        ->with('success','User edited successfully.');
+            ->with('success', 'User edited successfully.');
     }
 
     /**

@@ -26,6 +26,10 @@
                 width: 15rem;
                 height: 18rem; 
             }
+            .noti {
+                position: relative;
+                top: -8px;
+            }
             .text-size{
                     overflow: hidden;
                     text-overflow: ellipsis;

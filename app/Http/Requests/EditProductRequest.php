@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Support\Str;
 use Illuminate\Foundation\Http\FormRequest;
 
 class EditProductRequest extends FormRequest
@@ -25,9 +26,26 @@ class EditProductRequest extends FormRequest
     {
         return [
             'name'=>'required',
-            'price'=>'required',
+            'price'=>['required',
+                function ($attribute, $value, $fail) {
+                    if ($value < 100) {
+                        $fail ('The '.$attribute.' should be at least 100 mmk');
+                    }
+                },
+            ],
             'category'=>'required',
-            'phone'=>'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'phone' => ['required','regex:/^([0-9\s\-\+\(\)]*)$/','min:10','max:15','ends_with:0,1,2,3,4,5,6,7,8,9',
+                function ($attribute, $value, $fail) {
+                    if (Str::substrCount($value, '-',) > 1) {
+                        $fail ('The '.$attribute.' number must contain only one special character');
+                    }
+                },
+                function ($attribute, $value, $fail) {
+                    if (Str::substrCount($value, '+',) > 1) {
+                        $fail ('The '.$attribute.' number must contain only one special character');
+                    }
+                },
+            ],
             'address'=>'required',
         ];
     }
@@ -44,6 +62,7 @@ class EditProductRequest extends FormRequest
             'price.required' => 'Please describe your selling price',
             'phone.required' => 'Please describe your contact number',
             'phone.regex' => 'Please enter real phone number',
+            'phone.ends_with' => 'Please enter real phone number',
             'phone.min' => 'Please enter real phone number',
             'address.required' => 'Please describe your product location',
         ];

@@ -16,8 +16,32 @@
         </div>
     </div>
 </div>
-<div class="mb-1">
-    <a href="{{route('backend-products.create')}}" class="btn btn-primary"><i class="fas fa-plus"></i> Add new prodcut</a>
+<div class="row mb-1">
+    <div>
+        <a href="{{route('backend-products.create')}}" class="btn btn-primary ml-3"><i class="fas fa-plus"></i> Add new prodcut</a>
+        <a href="{{route('export')}}" class="btn btn-success ml-1"><i class="fas fa-file-excel"></i> Export excel file</a>
+    </div>
+    <div class="ml-auto">
+        <form action="{{route('import')}}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="row mr-5">
+                <div class="col-10">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input @error('file') is-invalid @enderror" name="file" id="customFile">
+                        <label class="custom-file-label" for="customFile">Choose file</label>
+                        @error('file')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-2">
+                    <button type="submit" class="btn btn-primary">
+                        {{ __('Import') }}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>            
 <div class="card">
     <div class="card-body">

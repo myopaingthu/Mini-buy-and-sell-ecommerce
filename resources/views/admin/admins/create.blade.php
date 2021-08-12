@@ -23,7 +23,7 @@
             <div class="form-group row">
                 <label for="name" class="col-md-2 col-form-label">{{ __('Name') }}</label>
                 <div class="col-md-10">
-                    <input type="text" class="form-control" name="name" value="{{old('name')}}">
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}">
                     @error('name')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -32,7 +32,7 @@
             <div class="form-group row">
                 <label for="email" class="col-md-2 col-form-label">{{ __('Email Address') }}</label>
                 <div class="col-md-10">
-                    <input type="text" class="form-control" name="email" value="{{old('email')}}">
+                    <input type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{old('email')}}">
                     @error('email')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -41,7 +41,7 @@
             <div class="form-group row">
                 <label for="password" class="col-md-2 col-form-label">{{ __('Password') }}</label>
                 <div class="col-md-10">
-                    <input type="password" class="form-control" name="password" value="{{old('password')}}">
+                    <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" value="{{old('password')}}">
                     @error('password')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -50,7 +50,7 @@
             <div class="form-group row">
                 <label for="password_confirmation" class="col-md-2 col-form-label">{{ __('Confirm Password') }}</label>
                 <div class="col-md-10">
-                    <input type="password" class="form-control" name="password_confirmation" value="{{old('password')}}">
+                    <input type="password" class="form-control @error('password') is-invalid @enderror" name="password_confirmation" value="{{old('password')}}">
                     @error('password')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror

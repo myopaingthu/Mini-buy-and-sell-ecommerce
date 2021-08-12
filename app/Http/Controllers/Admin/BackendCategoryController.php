@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Category;
-use Yajra\Datatables\Datatables;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use Yajra\Datatables\Datatables;
 
 class BackendCategoryController extends Controller
 {
@@ -19,7 +19,7 @@ class BackendCategoryController extends Controller
         return view('admin.categories.index');
     }
 
-         /**
+    /**
      * Give a resource data for ajax call
      *
      * @return \Illuminate\Http\Response
@@ -27,13 +27,13 @@ class BackendCategoryController extends Controller
     public function ajaxData()
     {
         return Datatables::of(Category::query())->editColumn('created_at', function ($request) {
-                                        return $request->created_at->format('Y-m-d'); // human readable format
-                                    })
-                                    ->addColumn('action', function ($user) {
-                                        $icon = '<button type="submit" class="btn btn-sm btn-danger delete-button" data-id="'.$user->id.'"><i class="fas fa-trash"></i> Delete</button>';
-                                        return $icon;
-                                    })
-                                    ->make(true);
+            return $request->created_at->format('Y-m-d'); // human readable format
+        })
+            ->addColumn('action', function ($user) {
+                $icon = '<button type="submit" class="btn btn-sm btn-danger delete-button" data-id="' . $user->id . '"><i class="fas fa-trash"></i> Delete</button>';
+                return $icon;
+            })
+            ->make(true);
     }
 
     /**
@@ -61,7 +61,7 @@ class BackendCategoryController extends Controller
         Category::create($request->all());
 
         return redirect()->route('backend-categories.index')
-                        ->with('success','Category created successfully.');
+            ->with('success', 'Category created successfully.');
     }
 
     /**

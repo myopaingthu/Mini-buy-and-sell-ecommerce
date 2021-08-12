@@ -45,7 +45,8 @@
             <div class="form-group row">
                 <label for="name" class="col-md-2 col-form-label">{{ __('Name') }}</label>
                 <div class="col-md-10">
-                    <input type="text" class="form-control" name="name" value="{{$user->name}}">
+                    <input type="hidden" name="id" value="{{$user->id}}">
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{$user->name}}">
                     @error('name')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -54,7 +55,7 @@
             <div class="form-group row">
                 <label for="name" class="col-md-2 col-form-label">{{ __('Email Address') }}</label>
                 <div class="col-md-10">
-                    <input type="text" class="form-control" name="email" value="{{$user->email}}">
+                    <input type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{$user->email}}">
                     @error('email')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror

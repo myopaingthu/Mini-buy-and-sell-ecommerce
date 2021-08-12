@@ -52,6 +52,8 @@ Route::prefix('admin')->middleware('admin', 'auth')->group(function() {
     Route::resource('admins', AdminResourceController::class);
     Route::resource('backend-products', BackProductController::class);
     Route::resource('backend-categories', BackendCategoryController::class);
+    Route::get('export', [BackProductController::class, 'export'])->name('export');
+    Route::post('import', [BackProductController::class, 'import'])->name('import');
     
 });
 

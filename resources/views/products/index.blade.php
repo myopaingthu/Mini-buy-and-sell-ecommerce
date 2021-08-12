@@ -30,8 +30,55 @@
 <div class="container-fluid mt-3">
     <div class="row">
         <div class="col-md-3">
+            <form action="{{route('search')}}" method="GET">
+                @csrf
+                <div class="input-group">
+                    <input class="form-control py-2" name="search" type="search" placeholder="Search products...">
+                    <span class="input-group-append">
+                      <button class="btn btn-outline-secondary border-left-0 border" type="submit">
+                            <i class="fa fa-search"></i>
+                      </button>
+                    </span>
+                </div>
+                @error('search')
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </form>
+        </div>
+        <div class="col-md-3"></div>
+        <div class="col-md-3 text-md-right mt-md-0 mt-2">
+            <form action="{{route('sort')}}" method="GET">
+                @csrf
+                <div class="form-group row">
+                    <label for="type" class="col-4 col-form-label">{{ __('Sort by') }}</label>
+                    <div class="col-8">
+                    <select class="form-control" name="type">
+                        <option value="date">Date</option>
+                        <option value="price">Price</option>  
+                    </select>
+                    </div>
+                </div>
+        </div>
+        <div class="col-md-3">
+            <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioInline1" name="sort" value="ascend" class="custom-control-input" required>
+                <label class="custom-control-label" for="customRadioInline1">Ascending</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioInline2" name="sort" value="descend" class="custom-control-input" required>
+                <label class="custom-control-label" for="customRadioInline2">Descending</label>
+            </div>
+            <button type="submit" class="btn btn-secondary">
+                {{ __('Sort') }}
+            </button>
+        </form>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-3">
             @include('layouts.sidebar')
-            <div class="bg-gray mt-3">
+            {{-- <div class="bg-gray mt-3">
                 <form action="{{route('search')}}" method="GET">
                     @csrf
                     <div class="input-group">
@@ -72,7 +119,7 @@
                         </button>
                     </form>
                 </div>
-            </div>
+            </div> --}}
         </div>
         <div class="col-md-9">
             <div class="container-fluid mt-3 mt-sm-0 pl-0">

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Yajra\Datatables\Datatables;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\CreateUserRequest;
+use Yajra\Datatables\Datatables;
 
 class AdminResourceController extends Controller
 {
@@ -21,7 +21,7 @@ class AdminResourceController extends Controller
         return view('admin.admins.index');
     }
 
-     /**
+    /**
      * Give a resource data for ajax call
      *
      * @return \Illuminate\Http\Response
@@ -30,14 +30,14 @@ class AdminResourceController extends Controller
     {
         $users = User::where('role_id', 1)->get();
         return Datatables::of($users)->editColumn('created_at', function ($request) {
-                                        return $request->created_at->format('Y-m-d'); // human readable format
-                                    })
-                                    ->addColumn('action', function ($user) {
-                                        $icon = '<a href="'.route('admins.edit', [$user->id]).'" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i> Edit</a>
-                                            <button type="submit" class="btn btn-sm btn-danger delete-button" data-id="'.$user->id.'"><i class="fas fa-trash"></i> Delete</button>';
-                                        return $icon;
-                                    })
-                                    ->make(true);
+            return $request->created_at->format('Y-m-d'); // human readable format
+        })
+            ->addColumn('action', function ($user) {
+                $icon = '<a href="' . route('admins.edit', [$user->id]) . '" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i> Edit</a>
+                <button type="submit" class="btn btn-sm btn-danger delete-button" data-id="' . $user->id . '"><i class="fas fa-trash"></i> Delete</button>';
+                return $icon;
+            })
+            ->make(true);
     }
 
     /**
@@ -62,11 +62,11 @@ class AdminResourceController extends Controller
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('name')),
-            'role_id' => 1
+            'role_id' => 1,
         ]);
 
         return redirect()->route('admins.index')
-                        ->with('success','Admin created successfully.');
+            ->with('success', 'Admin created successfully.');
     }
 
     /**
@@ -114,7 +114,7 @@ class AdminResourceController extends Controller
         $user->update();
 
         return redirect()->route('admins.index')
-                        ->with('success','Admin edited successfully.');
+            ->with('success', 'Admin edited successfully.');
     }
 
     /**

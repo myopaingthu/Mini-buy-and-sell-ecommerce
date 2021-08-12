@@ -6,9 +6,12 @@ use App\Models\Image;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Exports\ProductsExport;
+use App\Imports\ProductsImport;
 use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\EditProductRequest;
 use App\Http\Requests\StoreProductRequest;
 
@@ -24,7 +27,7 @@ class BackProductController extends Controller
         return view('admin.products.index');
     }
 
-      /**
+    /**
      * Give a resource data for ajax call
      *
      * @return \Illuminate\Http\Response
@@ -33,21 +36,21 @@ class BackProductController extends Controller
     {
         $products = Product::all();
         return Datatables::of($products)->editColumn('created_at', function ($request) {
-                                            return $request->created_at->format('Y-m-d'); // human readable format
-                                        })
-                                        ->addColumn('category', function($product) {
-                                            return $product->category->name;
-                                        })
-                                        ->addColumn('user', function($product) {
-                                            return $product->user->name;
-                                        })
-                                        ->addColumn('action', function ($product) {
-                                            $icon = '<a href="'.route('backend-products.show', [$product->id]).'" class="btn btn-sm btn-info"><i class="fas fa-eye"></i>View</a>
-                                                <a href="'.route('backend-products.edit', [$product->id]).'" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i>Edit</a>
-                                                <button type="submit" class="btn btn-sm btn-danger delete-button" data-id="'.$product->id.'"><i class="fas fa-trash"></i>Delete</button>';
-                                            return $icon;
-                                        })
-                                        ->make(true);
+            return $request->created_at->format('Y-m-d'); // human readable format
+        })
+            ->addColumn('category', function ($product) {
+                return $product->category->name;
+            })
+            ->addColumn('user', function ($product) {
+                return $product->user->name;
+            })
+            ->addColumn('action', function ($product) {
+                $icon = '<a href="' . route('backend-products.show', [$product->id]) . '" class="btn btn-sm btn-info"><i class="fas fa-eye"></i>View</a>
+                                                <a href="' . route('backend-products.edit', [$product->id]) . '" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i>Edit</a>
+                                                <button type="submit" class="btn btn-sm btn-danger delete-button" data-id="' . $product->id . '"><i class="fas fa-trash"></i>Delete</button>';
+                return $icon;
+            })
+            ->make(true);
     }
 
     /**
@@ -79,7 +82,7 @@ class BackProductController extends Controller
             'description' => $request->input('description'),
         ]);
 
-        foreach ($request->file('images')  as $key => $value) {
+        foreach ($request->file('images') as $key => $value) {
             $image = time() . $key . '.' . $value->getClientOriginalExtension();
             $value->move(public_path('images'), $image);
             $product_image = new Image(['name' => $image]);
@@ -87,7 +90,7 @@ class BackProductController extends Controller
         }
 
         return redirect()->route('backend-products.index')
-                        ->with('success','Product created successfully.');
+            ->with('success', 'Product created successfully.');
     }
 
     /**
@@ -125,15 +128,15 @@ class BackProductController extends Controller
     public function update(EditProductRequest $request, $id)
     {
         Product::where('id', $id)
-                ->update([
-                    'name' => $request->input('name'),
-                    'category_id' => $request->input('category'),
-                    'price' => $request->input('price'),
-                    'phone' => $request->input('phone'),
-                    'address' => $request->input('address'),
-                    'description' => $request->input('description'),
-                    'available' => $request->input('available'),
-                ]);
+            ->update([
+                'name' => $request->input('name'),
+                'category_id' => $request->input('category'),
+                'price' => $request->input('price'),
+                'phone' => $request->input('phone'),
+                'address' => $request->input('address'),
+                'description' => $request->input('description'),
+                'available' => $request->input('available'),
+            ]);
 
         if ($request->file('images')) {
             $product = Product::findOrFail($id);
@@ -142,7 +145,7 @@ class BackProductController extends Controller
                 $product_image->delete();
             }
 
-            foreach ($request->file('images')  as $key => $value) {
+            foreach ($request->file('images') as $key => $value) {
                 $image = time() . $key . '.' . $value->getClientOriginalExtension();
                 $value->move(public_path('images'), $image);
                 $product_image = new Image(['name' => $image]);
@@ -151,7 +154,7 @@ class BackProductController extends Controller
         }
 
         return redirect()->route('backend-products.index')
-                        ->with('success','Product edited successfully.');
+            ->with('success', 'Product edited successfully.');
     }
 
     /**
@@ -165,5 +168,32 @@ class BackProductController extends Controller
         $product = Product::findOrFail($id);
         $product->delete();
         return 'success';
+    }
+
+    /**
+     * Generate excel file of resource
+     * 
+    * @return \Illuminate\Support\Collection
+    */
+    public function export() 
+    {
+        return Excel::download(new ProductsExport, 'products.xlsx');
+    }
+
+    /**
+    * Import from an excel file
+    * @param \Illuminate\Http\Request $request 
+    * @return \Illuminate\Support\Collection
+    */
+    public function import(Request $request) 
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx',
+        ]);
+        
+        Excel::import(new ProductsImport, request()->file('file'));
+             
+        return redirect()->route('backend-products.index')
+            ->with('success', 'Products imported successfully.');
     }
 }
