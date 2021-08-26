@@ -11,19 +11,44 @@ use App\Models\User;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Image as ImageResize;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::where('available', 1)->latest()->paginate(12);
+        $type = $request->input('type');
+        $sort = $request->input('sort');
+        $from = $request->input('from');
+        $to = $request->input('to');
+
+        $products = Product::where('available', 1);
+
+        if ($type == 'date' && $sort == 'ascend') {
+            $products = $products->orderBy('created_at', 'asc');
+        } elseif ($type == 'date' && $sort == 'descend') {
+            $products = $products->orderBy('created_at', 'desc');
+        } elseif ($type == 'price' && $sort == 'descend') {
+            $products = $products->orderBy('price', 'desc');
+        } elseif ($type == 'price' && $sort == 'ascend') {
+            $products = $products->orderBy('price', 'asc');
+        } elseif ($from && $to) {
+            $products = $products->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
+        } else {
+            $products = $products->latest();
+        }
+
+        $products = $products->paginate(15);
+
         return view('products.index', compact('products'))
-            ->with('i', (request()->input('page', 1) - 1) * 12);
+            ->with('i', (request()->input('page', 1) - 1) * 15);
     }
 
     /**
@@ -81,8 +106,10 @@ class ProductController extends Controller
         $category = Category::where('id', $request->input('category'))->first();
 
         foreach ($request->file('images') as $key => $value) {
+            $extension = $value->getClientOriginalExtension();
             $image = time() . $key . '.' . $value->getClientOriginalExtension();
-            $value->move(public_path('images'), $image);
+            $img = ImageResize::make($value->path())->resize(183, 148.8)->encode($extension);
+            Storage::disk('public')->put($path = "images/" . $image, (string) $img);
             $images[] = $image;
         }
 
@@ -136,7 +163,12 @@ class ProductController extends Controller
         } else {
             $favourited = 0;
         }
-        return view('products.show', compact('product', 'favourited'));
+
+        $relatedProducts = $product->category->products()->inRandomOrder()->take(6)->get();
+
+        $userProducts = $product->user->products()->inRandomOrder()->take(6)->get();
+
+        return view('products.show', compact('product', 'favourited', 'relatedProducts', 'userProducts'));
     }
 
     /**
@@ -262,30 +294,4 @@ class ProductController extends Controller
             ->get();
         return view('products.searchedProducts', compact('products'));
     }
-
-    /**
-     * Sort by the specified keyword.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function sortProduct(Request $request)
-    {
-        $type = $request->input('type');
-        $sort = $request->input('sort');
-
-        if ($type == 'date' && $sort == 'ascend') {
-            $products = Product::orderBy('created_at', 'asc')->paginate(12);
-        } elseif ($type == 'date' && $sort == 'descend') {
-            $products = Product::orderBy('created_at', 'desc')->paginate(12);
-        } elseif ($type == 'price' && $sort == 'descend') {
-            $products = Product::orderBy('price', 'desc')->paginate(12);
-        } else {
-            $products = Product::orderBy('price', 'asc')->paginate(12);
-        }
-
-        return view('products.index', compact('products'))
-            ->with('i', (request()->input('page', 1) - 1) * 12);
-    }
-
 }

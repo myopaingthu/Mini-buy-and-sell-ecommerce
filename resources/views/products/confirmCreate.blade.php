@@ -24,7 +24,7 @@
                         @csrf
                         <div class="row" id="images-preview-div"> 
                             @foreach ($images as $image)
-                                <img src="{{asset('images/'.$image)}}" alt="product">
+                                <img src="{{asset('storage/images/'.$image)}}" alt="product">
                                 <input type="hidden" name="images[]" value="{{$image}}">
                             @endforeach
                         </div>
