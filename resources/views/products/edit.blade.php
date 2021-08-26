@@ -26,7 +26,7 @@
                 <div class="card-body show-images">
                     <div class="row">
                         @foreach ($product->images as $key => $value)
-                        <img src="{{asset('images/'.$value->name)}}" class="product-images">
+                        <img src="{{asset('storage/images/'.$value->name)}}" class="product-images">
                         @endforeach
                     </div>
                 </div>

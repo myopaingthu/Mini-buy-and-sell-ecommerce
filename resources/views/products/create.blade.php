@@ -32,6 +32,9 @@
                                     @error('images')
                                     <span class="text-danger">{{ $message }}</span>
                                     @enderror  
+                                    @error('images.*')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror  
                                 </div>
                             </div>
                         </div>

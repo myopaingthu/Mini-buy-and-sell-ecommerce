@@ -34,8 +34,8 @@ class StoreProductRequest extends FormRequest
                 },
             ],
             'category' => 'required',
-            'images' => 'required|array|nullable',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg',
+            'images' => 'required',
+            'images.*' => 'mimes:jpeg,png,jpg,gif,svg',
             'phone' => ['required','regex:/^([0-9\s\-\+\(\)]*)$/','min:10','max:15','ends_with:0,1,2,3,4,5,6,7,8,9',
                 function ($attribute, $value, $fail) {
                     if (Str::substrCount($value, '-',) > 1) {
@@ -63,6 +63,7 @@ class StoreProductRequest extends FormRequest
             'name.required' => 'Product name is required',
             'price.required' => 'Please describe your selling price',
             'images.required' => 'Please upload your product photo',
+            'images.*.mimes' => 'File must be an image type',
             'phone.required' => 'Please describe your contact number',
             'phone.regex' => 'Please enter real phone number',
             'phone.ends_with' => 'Please enter real phone number',

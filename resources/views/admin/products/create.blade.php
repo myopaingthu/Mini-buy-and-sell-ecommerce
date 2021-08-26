@@ -38,7 +38,10 @@
                         <label class="custom-file-label" for="customFile">Select once to upload multiple</label>
                         @error('images')
                         <span class="text-danger">{{ $message }}</span>
-                        @enderror  
+                        @enderror
+                        @error('images.*')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror   
                     </div>
                 </div>
             </div>

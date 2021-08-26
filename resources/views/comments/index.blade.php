@@ -14,25 +14,26 @@
      <div class="card">
         <div class="card-body">
             <h6 class="card-text"><span class="badge badge-secondary">{{$comments->count()}}</span> comments</h6>
-            @foreach ($comments as $comment)
-            <div class="form-group">
-                <label for="name">{{$comment->user->name}}</label><small class="form-text text-muted float-right">{{$comment->created_at->format('d/m/Y')}}</small>
-                <div class="col-md-12 bg-light">
-                    {{$comment->body}}
+                @foreach ($comments as $comment)
+                <div class="form-group">
+                    <label for="name">{{$comment->user->name}}</label><small class="form-text text-muted float-right">{{$comment->created_at->diffForHumans()}}</small>
+                    <div class="col-md-12 bg-light">
+                        {{$comment->body}}
+                    </div>
                 </div>
-            </div>
-            @if (auth()->user()->id == $comment->user->id)
-               <div class="row float-right mr-1">
-                    <form action="{{route('comments.destroy', [$comment->id])}}" method="POST">
-                        <a href="{{route('comments.edit', [$comment->id])}}" class="badge badge-secondary">Edit</a>
-                        @method('DELETE')
-                        @csrf
-                        <button type="submit" class="badge badge-secondary">Delete</button>
-                    </form>
-                </div>
-                <div class="clearfix"></div> 
-            @endif
-            @endforeach
+                @if (auth()->user()->id == $comment->user->id)
+                <div class="row float-right mr-1">
+                        <form action="{{route('comments.destroy', [$comment->id])}}" method="POST">
+                            <a href="{{route('comments.edit', [$comment->id])}}" class="badge badge-secondary">Edit</a>
+                            @method('DELETE')
+                            @csrf
+                            <button type="submit" class="badge badge-secondary">Delete</button>
+                        </form>
+                    </div>
+                    <div class="clearfix"></div> 
+                @endif
+                @endforeach
+                {{ $comments->links() }}
             <hr>
             <form action="{{route('products.comments.store', [$product->id])}}" method="POST">
                 @csrf

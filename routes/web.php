@@ -32,7 +32,6 @@ Route::group(['middleware'=>['auth']], function() {
     Route::resource('products', ProductController::class);
     Route::post('products/confirmCreate', [ProductController::class, 'confirmCreate'])->name('confirmCreate');
     Route::get('proudcts/search', [ProductController::class, 'search'])->name('search');
-    Route::get('proudcts/sort', [ProductController::class, 'sortProduct'])->name('sort');
     Route::post('users/confirmEdit', [UserController::class, 'confirmEdit'])->name('confirmEdit');
     Route::get('users/{user}/products', [ProductController::class, 'userProduct'])->name('userProduct');
     Route::post('products/{product}/confirmEditProduct', [ProductController::class, 'confirmEdit'])->name('confirmEditProduct');
@@ -63,3 +62,5 @@ Route::get('backend/products/data', [BackProductController::class, 'ajaxData'])-
 Route::get('backend/categories/data', [BackendCategoryController::class, 'ajaxData'])->name('categories.datas');
 
 require __DIR__.'/auth.php';
+
+// [ProductController::class, 'dateSearch'])->name('dateSearch');
