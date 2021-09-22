@@ -1,10 +1,6 @@
-## Still developing and testing demo
+## Ui changes and use ajax for date range picker, sorting and add, remove favourite
 
-![](demo.gif)
-
-## A little changes to ui and sorting function
-
-![](demo4.gif)
+![](finalDemo.gif)
 
 ## New comment notification
 

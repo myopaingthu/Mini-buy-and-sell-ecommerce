@@ -150,7 +150,7 @@
               <a href="{{route('products.comments.index', [$product->id])}}" class="btn btn-dark">Comment Section <i class="fa fa-comments"></i></a>
             </div>
           </div>
-          @if ($favourited == 0)
+          {{-- @if (!$favourited)
           <div class="row">
             <div class="col-md-2">
               <h6 class="card-title">Want to save?</h6>
@@ -165,10 +165,28 @@
               <h6 class="card-title">Want to unsave?</h6>
             </div>
             <div class="col-md-10">
-              <a class="btn btn-dark" href="{{route('favourites.destroy', [$favourited])}}">Remove form favourite <i class="fa fa-trash-alt"></i></a>
+              <a class="btn btn-dark" href="{{route('favourites.destroy', [$product->id])}}">Remove form favourite <i class="fa fa-trash-alt"></i></a>
             </div>
           </div>
-          @endif
+          @endif --}}
+          <div class="row add-favourite" style="{{ $favourited ? 'display: none;' : '' }}">
+            <div class="col-md-2">
+              <h6 class="card-title">Want to save?</h6>
+            </div>
+            <div class="col-md-10">
+              {{-- <a class="btn btn-dark" href="{{route('favourites.store', ['user' => auth()->user()->id, 'product' => $product->id ])}}">Add to favourite <i class="fa fa-heart"></i></a> --}}
+              <button type="submit" class="btn btn-dark add-button" data-user-id="{{auth()->user()->id}}" data-product-id="{{$product->id}}">Add to favourite <i class="fas fa-heart"></i></button>
+            </div>
+          </div>
+          <div class="row delete-favourite" style="{{ !$favourited ? 'display: none;' : '' }}">
+            <div class="col-md-2">
+              <h6 class="card-title">Want to unsave?</h6>
+            </div>
+            <div class="col-md-10">
+              {{-- <a class="btn btn-dark" href="{{route('favourites.destroy', [$favourited->id])}}">Remove form favourite <i class="fa fa-trash-alt"></i></a> --}}
+              <button type="submit" class="btn btn-dark remove-button" data-product-id="{{$product->id}}">Remove form favourite <i class="fas fa-trash-alt"></i></button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -224,6 +242,31 @@
         $(this).addClass("text-white bg-dark");
         }, function(){
         $(this).removeClass("text-white bg-dark");
+        });
+        $(document).on('click', '.add-button', function(e){
+          e.preventDefault();
+          var product_id = $(this).data('product-id');
+          var user_id = $(this).data('user-id');
+          $.ajax({
+            url : `/users/${user_id}/products/${product_id}/favourites`,
+            type : 'GET',
+            success : function() {
+              $('.add-favourite').hide();
+              $('.delete-favourite').show();
+            }
+          });
+        });
+        $(document).on('click', '.remove-button', function(e){
+          e.preventDefault();
+          var product_id = $(this).data('product-id');
+          $.ajax({
+            url : `/products/${product_id}/favourites/delete`,
+            type : 'GET',
+            success : function() {
+              $('.delete-favourite').hide();
+              $('.add-favourite').show();
+            }
+          });
         });
     });
 </script>

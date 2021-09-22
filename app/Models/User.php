@@ -67,19 +67,19 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     }
 
      /**
-     * Get the favourite associated with the user.
-     */
-    public function favourites()
-    {
-        return $this->hasMany(Favourite::class);
-    }
-
-     /**
      * Get the rold that owns the user.
      */
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+     /**
+     * The favourites that belong to the user.
+     */
+    public function favourites()
+    {
+        return $this->belongsToMany(Product::class, 'favourites', 'user_id', 'product_id')->withTimeStamps();
     }
 
     /**  

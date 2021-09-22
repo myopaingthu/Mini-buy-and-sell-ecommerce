@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\EditProductRequest;
-use App\Http\Requests\StoreProductRequest;
-use App\Models\Category;
+use DB;
+use Auth;
+use App\Models\User;
 use App\Models\Image;
 use App\Models\Product;
-use App\Models\User;
-use Auth;
-use DB;
+use App\Models\Category;
+use App\Models\Favourite;
+use Image as ImageResize;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Image as ImageResize;
+use App\Http\Requests\EditProductRequest;
+use App\Http\Requests\StoreProductRequest;
 
 class ProductController extends Controller
 {
@@ -150,19 +151,9 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        $favourited_products = auth()->user()->favourites;
-        if ($favourited_products->isNotEmpty()) {
-            foreach ($favourited_products as $key => $value) {
-                if ($value->product_id == $product->id) {
-                    $favourited = $value->id;
-                    break;
-                } else {
-                    $favourited = 0;
-                }
-            }
-        } else {
-            $favourited = 0;
-        }
+        $favourited = Favourite::where('product_id', $product->id)
+            ->where('user_id', auth()->id())
+            ->first();
 
         $relatedProducts = $product->category->products()->inRandomOrder()->take(6)->get();
 

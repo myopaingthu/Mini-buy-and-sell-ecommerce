@@ -69,7 +69,7 @@
             confirmButtonText: 'Yes, delete it!'
             }).then(function (result) {
             if (result.isConfirmed) {
-               $.ajax({
+                $.ajax({
                    url : 'admins/' + id,
                    type : 'DELETE',
                    success : function() {

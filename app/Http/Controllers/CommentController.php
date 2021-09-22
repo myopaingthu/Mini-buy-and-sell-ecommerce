@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Comment;
-use Illuminate\Http\Request;
-use App\Models\Product;
 use Auth;
+use App\Models\Comment;
+use App\Models\Product;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use App\Notifications\NewCommentNotification;
 
 class CommentController extends Controller
@@ -53,7 +54,7 @@ class CommentController extends Controller
         $user = $product->user;
         if ($comment->user_id != $product->user_id) {
             $title = 'New Comment';
-            $text = $comment->user->name.' has commented on your product';
+            $text = $comment->user->name . ' has commented on ' . $product->name;
             $route = route('products.comments.index', [$product->id]);
             $user->notify(new NewCommentNotification($title, $text, $route));
         }

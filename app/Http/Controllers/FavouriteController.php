@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Favourite;
+use Session;
 use App\Models\User;
 use App\Models\Product;
+use App\Models\Favourite;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Session;
 
 class FavouriteController extends Controller
 {
@@ -23,10 +24,7 @@ class FavouriteController extends Controller
     {
         $favourited_products = $user->favourites;
         if ($favourited_products->isNotEmpty()) {
-            foreach ($favourited_products as $key => $value) {
-                $datas[] = $value->product;
-            }
-            $products = $this->paginate($datas);
+            $products = $user->favourites()->paginate(12);
             return view('products.favouritedProduct', compact('products'));
         }
         else {
@@ -35,7 +33,7 @@ class FavouriteController extends Controller
     }
 
     /**
-     * The attributes that are mass assignable.
+     * Custom pagination
      *
      * @var array
      */
@@ -66,12 +64,13 @@ class FavouriteController extends Controller
      */
     public function store(User $user, Product $product, Request $request)
     {
-        Favourite::create([
-            'user_id' => $user->id,
-            'product_id' => $product->id
-        ]);
+        // Favourite::create([
+        //     'user_id' => $user->id,
+        //     'product_id' => $product->id
+        // ]);
+        $user->favourites()->attach($product->id);
            
-        return back();
+        return 'success';
     }
 
     /**
@@ -111,12 +110,12 @@ class FavouriteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Favourite  $favourite
+     * @param  \App\Models\Product $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Favourite $favourite)
+    public function destroy(Product $product)
     {
-        $favourite->delete();
-        return back();
+        auth()->user()->favourites()->detach($product->id);
+        return 'success';
     }
 }

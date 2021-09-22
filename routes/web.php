@@ -39,7 +39,7 @@ Route::group(['middleware'=>['auth']], function() {
     Route::resource('categories', CategoryController::class);
     Route::resource('products.comments', CommentController::class)->shallow();
     Route::get('users/{user}/products/{product}/favourites', [FavouriteController::class, 'store'])->name('favourites.store');
-    Route::get('favourites/{favourite}/delete', [FavouriteController::class, 'destroy'])->name('favourites.destroy');
+    Route::get('products/{product}/favourites/delete', [FavouriteController::class, 'destroy'])->name('favourites.destroy');
     Route::get('users/{user}/favourites', [FavouriteController::class, 'index'])->name('userFavourites');
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::get('notifications/{id}', [NotificationController::class, 'show'])->name('notifications.show');
